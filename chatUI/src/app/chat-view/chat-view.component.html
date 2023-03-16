@@ -1,0 +1,12 @@
+<div class="d-flex flex-column">
+<!--  <app-message-view class="d-flex flex-row-reverse"></app-message-view>-->
+<!--  <app-message-view class="d-flex flex-row"></app-message-view>-->
+  <ng-container *ngFor = "let item of messages; trackBy: trackByFn" >
+    <ng-container *ngIf="item.from===username">
+      <app-message-view class="d-flex flex-row-reverse" [textInput] = "item.text"></app-message-view>
+    </ng-container>
+    <ng-container *ngIf="item.from !== username">
+      <app-message-view class="d-flex flex-row" [textInput] = "item.text" ></app-message-view>
+    </ng-container>
+  </ng-container>
+</div>
