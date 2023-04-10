@@ -16,6 +16,8 @@ import { ChatViewComponent } from './chat-view/chat-view.component';
 import { MessageViewComponent } from './message-view/message-view.component';
 import { ChatNavigationComponent } from './chat-navigation/chat-navigation.component';
 import { ChannelComponent } from './channel/channel.component';
+import { NewConversationComponent } from './new-conversation/new-conversation.component';
+import { NewConversationSearchComponent } from './new-conversation-search/new-conversation-search.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { ChannelComponent } from './channel/channel.component';
     ChatViewComponent,
     MessageViewComponent,
     ChatNavigationComponent,
-    ChannelComponent
+    ChannelComponent,
+    NewConversationComponent,
+    NewConversationSearchComponent
   ],
   imports: [
     BrowserModule,

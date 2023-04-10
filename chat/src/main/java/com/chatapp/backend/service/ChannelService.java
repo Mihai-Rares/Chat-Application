@@ -19,9 +19,9 @@ public class ChannelService {
     private final ChannelDAO channels;
     private final UserDAO userDAO;
 
-    public void addNewChannel(Channel channel) {
+    public Channel addNewChannel(Channel channel) {
         log.info("Recived new user {}", channel.getName());
-        channels.save(channel);
+        return channels.save(channel);
     }
 
     public Collection<User> getMembersForChannel(int channel_id) {

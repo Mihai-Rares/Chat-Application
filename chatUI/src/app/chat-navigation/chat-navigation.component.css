@@ -1,0 +1,11 @@
+.btn.btn-secondary.no-arrow {
+  background-color: transparent;
+  border: none;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.btn.btn-secondary.no-arrow::after {
+  display: none;
+}

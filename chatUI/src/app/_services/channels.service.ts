@@ -3,7 +3,8 @@ import { Channel } from '../_models/channel';
 import { Conversation } from '../_models/conversation';
 import { Message } from '../_models/message';
 import { UserService } from './user.service';
-
+import * as SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,15 +25,20 @@ export class ChannelsService implements OnInit, OnDestroy{
   }
 
   public ngOnInit(): void {
-    console.log("chanel service");
       this.computeChannels();
-      this.intervalId = setInterval(() => this.computeChannels(), 1000);
+
+  }
+  public addNewConversation(basicChannel : any, name : string){
+    let channel : Channel = new Conversation(basicChannel.id, name, []);
+    this._channels.unshift(channel);
+    this.channelMap.set(basicChannel.id, channel);
   }
 
   public async computeChannels(){
       let channelMap : Map<string, Channel> = new Map();
       let rslt = await this.userService.getChannels().toPromise();
     let basicChannels : any = rslt;
+
     console.log(basicChannels);
     for (let basicChannel of basicChannels){
       if(basicChannel.name==""){

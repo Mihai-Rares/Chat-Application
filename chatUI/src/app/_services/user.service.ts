@@ -18,7 +18,7 @@ export class UserService {
 
   public login(loginData: any){
     console.log("post login message");
-    sessionStorage.setItem('username', loginData.username); 
+    sessionStorage.setItem('username', loginData.username);
     return this.httpClient.post(this.PATH_OF_API+"/login", loginData, {headers: this.requestHeader});
   }
 
@@ -37,6 +37,9 @@ export class UserService {
   public sendMessage(messageData: any){
     console.log("send message request\n");
     return this.httpClient.post(this.PATH_OF_API+"/sendMessage", messageData);
+  }
+  public startConversation(username: string){
+    return this.httpClient.post(this.PATH_OF_API+"/startConversation", username);
   }
 
 }

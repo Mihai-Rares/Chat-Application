@@ -20,10 +20,17 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedMethods(GET, POST, PUT, DELETE)
-                        .allowedHeaders("*")
-                        .allowedOriginPatterns("*")
-                        .allowCredentials(true);
+                        .allowedOrigins("http://localhost:4200") // replace with your frontend URL
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowCredentials(true)
+                        .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
+                        .maxAge(3600);
+                ;
+//                registry.addMapping("/**")
+//                        .allowedMethods(GET, POST, PUT, DELETE)
+//                        .allowedHeaders("*")
+//                        .allowedOriginPatterns("*")
+//                        .allowCredentials(true);
             }
         };
     }

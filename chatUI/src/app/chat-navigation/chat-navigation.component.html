@@ -1,17 +1,25 @@
-<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 390px;">
+<div>
+<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white"
+     style="width: 390px;border-right: 1px solid black;">
   <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 390px;">
-    <a href="/home" class="d-flex align-items-center flex-shrink-0 p-3 link-dark
-    text-decoration-none border-bottom">
+    <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
       <svg class="bi pe-none me-2" width="30" height="24">
         <use href="#bootstrap"/>
       </svg>
-      <span class="fs-5 fw-semibold">{{getUsername()}}</span>
-    </a>
-    <div class="list-group list-group-flush border-bottom scrollarea">
-      <ng-container *ngFor = "let item of channels; trackBy: trackByFn" >
-        <app-channel [channelName] = "item.getName()" [sent] = "item.getLastMessage().sent"
-                     [text] = "item.getLastMessage().text" [channel_id]="item.getId()"></app-channel>
-      </ng-container>
+      <div class="d-flex justify-content-between w-100">
+        <span class="fs-5 fw-semibold">{{getUsername()}}</span>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle no-arrow" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            &#x22EE;
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" (click)="showModal = !showModal; startConversation()">New Conversation</a></li>
+            <li><a class="dropdown-item">New Group</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
+</div>
+<app-new-conversation-search *ngIf=true (usernameSubmit)="onUsernameSubmit($event)">Test content</app-new-conversation-search>
 </div>
