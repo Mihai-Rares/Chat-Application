@@ -34,7 +34,7 @@ import java.util.Optional;
  * @since 20/3/2023
  */
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/api/accounts")
 public class AccountController {
 
     @Autowired

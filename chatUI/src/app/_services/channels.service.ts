@@ -24,7 +24,7 @@ export class ChannelsService implements OnInit, OnDestroy{
   }
 
   public ngOnInit(): void {
-    console.log("chanel service");
+    // console.log("chanel service");
       this.computeChannels();
       this.intervalId = setInterval(() => this.computeChannels(), 1000);
   }
@@ -33,17 +33,17 @@ export class ChannelsService implements OnInit, OnDestroy{
       let channelMap : Map<string, Channel> = new Map();
       let rslt = await this.userService.getChannels().toPromise();
     let basicChannels : any = rslt;
-    console.log(basicChannels);
+    // console.log(basicChannels);
     for (let basicChannel of basicChannels){
       if(basicChannel.name==""){
         let channel : Channel = new Conversation(basicChannel.id, "Person", []);
         channelMap.set(basicChannel.id, channel);
       }
     }
-      console.log(channelMap);
+      // console.log(channelMap);
       let messages : any = [];
       messages = await this.userService.getMessages().toPromise();
-    console.log(messages);
+    // console.log(messages);
       for (let m of messages){
         let message = new Message(m.id, new Date(parseInt(m.date)), m.text, m.from);
         let channel = channelMap.get(m.to);

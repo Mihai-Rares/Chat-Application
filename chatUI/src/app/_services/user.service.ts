@@ -12,13 +12,13 @@ export class UserService {
     }
     return "";
   }
-  PATH_OF_API: string="http://localhost:9090";
+  PATH_OF_API: string="http://localhost:9090/api";
   requestHeader = new HttpHeaders({ 'No-Auth': 'True' });
   constructor(private httpClient: HttpClient) {}
 
   public login(loginData: any){
     console.log("post login message");
-    sessionStorage.setItem('username', loginData.username); 
+    sessionStorage.setItem('username', loginData.username);
     return this.httpClient.post(this.PATH_OF_API+"/login", loginData, {headers: this.requestHeader});
   }
 
@@ -27,11 +27,11 @@ export class UserService {
   }
 
   public getChannels(){
-    console.log("get channels request\n");
+    // console.log("get channels request\n");
     return this.httpClient.get(this.PATH_OF_API + "/channels");
   }
   public getMessages(){
-    console.log("get message request\n");
+    // console.log("get message request\n");
     return this.httpClient.get(this.PATH_OF_API + "/messages");
   }
   public sendMessage(messageData: any){

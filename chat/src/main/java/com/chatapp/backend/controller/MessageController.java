@@ -4,10 +4,7 @@ import com.chatapp.backend.model.Message;
 import com.chatapp.backend.service.MessageService;
 import com.chatapp.backend.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import java.util.Comparator;
 
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;

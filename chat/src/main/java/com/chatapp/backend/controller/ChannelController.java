@@ -7,6 +7,7 @@ import com.chatapp.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ChannelController {
     private final ChannelService channelService;
