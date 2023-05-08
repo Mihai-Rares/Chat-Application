@@ -31,7 +31,7 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     this.intervalId = setInterval(
       ()=> {
         this.messages =  this.channelsService.getMessages(this.chatService.correspondent);
-        this.set
+        //this.set
       },
       500);
 

@@ -2,10 +2,12 @@ package com.chatapp.backend.controller;
 
 import com.chatapp.backend.model.Message;
 import com.chatapp.backend.service.MessageService;
+import com.chatapp.backend.service.SubscriberService;
 import com.chatapp.backend.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +18,7 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;
+    private final SubscriberService subscriberService;
     private final JsonUtil jsonUtil = JsonUtil.getSingleton();
 
     @GetMapping("/messagesForChannel")
@@ -38,7 +41,12 @@ public class MessageController {
 
     @PostMapping("/sendMessage")
     public void sendMessage(Principal principal, @RequestBody MessageInfo messageInfo) {
-        messageService.sendMessage(principal.getName(), messageInfo.to, messageInfo.text);
+        Message message = messageService.sendMessage(principal.getName(), messageInfo.to, messageInfo.text);
+        try {
+            subscriberService.broadcast(messageInfo.to, message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static class NewMessageRequest {

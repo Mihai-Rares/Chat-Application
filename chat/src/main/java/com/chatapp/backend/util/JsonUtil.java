@@ -15,7 +15,7 @@ public class JsonUtil {
     private static final JsonUtil singleton = new JsonUtil();
 
     public LoginData getLoginData(HttpServletRequest request) {
-        LoginData data = null;
+        LoginData data;
         try {
             RequestWrapper wrapper = new RequestWrapper(request);
             byte[] body = StreamUtils.copyToByteArray(wrapper.getInputStream());

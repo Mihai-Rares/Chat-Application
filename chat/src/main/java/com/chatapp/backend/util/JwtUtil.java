@@ -20,8 +20,7 @@ public class JwtUtil {
 
     private static final int TOKEN_VALIDITY = 3600 * 100;
     private static final JwtUtil singleton = new JwtUtil();
-
-    @Bean
+    
     public static JwtUtil getInstance() {
         return singleton;
     }

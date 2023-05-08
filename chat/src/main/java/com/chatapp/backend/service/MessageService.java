@@ -18,7 +18,7 @@ public class MessageService {
     private final UserDAO userDAO;
     private final ChannelDAO channelDAO;
 
-    public void sendMessage(String from, long to, String text) {
+    public Message sendMessage(String from, long to, String text) {
         User sender = userDAO.findByUsername(from);
         Channel channel = channelDAO.findById(to);
         if (channel != null && channel.isMember(sender)) {
@@ -27,8 +27,10 @@ public class MessageService {
             message.setTo(channel);
             message.setText(text);
             message.setDate(System.currentTimeMillis());
-            messages.save(message);
+            message = messages.save(message);
+            return message;
         }
+        return null;
     }
 
     public List<Message> getMessagesForChannel(String username, long channelId) {
