@@ -11,12 +11,20 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
 
+/**
+ * Component class that listens for WebSocket disconnection events.
+ */
 @Component
 @Slf4j
 public class WebSocketDisconnectListener implements ApplicationListener<SessionDisconnectEvent> {
     @Autowired
     SubscriberService subscriberService;
 
+    /**
+     * Called when a WebSocket session is disconnected.
+     *
+     * @param event The WebSocket session disconnect event.
+     */
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
@@ -25,3 +33,4 @@ public class WebSocketDisconnectListener implements ApplicationListener<SessionD
         subscriberService.unsubscribeUser(principal.getName());
     }
 }
+

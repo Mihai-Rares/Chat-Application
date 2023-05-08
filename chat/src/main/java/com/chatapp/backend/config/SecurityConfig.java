@@ -19,7 +19,30 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
 /**
- * @author Get Arrays (https://www.getarrays.io/)
+ * Provides security configuration for the application.
+ *
+ * <p>
+ * This configuration class extends {@link WebSecurityConfigurerAdapter} and provides methods for configuring
+ * authentication and authorization using Spring Security. It uses a {@link UserDetailsService} implementation and a
+ * {@link BCryptPasswordEncoder} to hash and compare passwords.
+ * </p>
+ *
+ * <p>
+ * The authentication process is handled by a custom filter called {@link CustomAuthenticationFilter}. This filter
+ * processes login requests and generates JSON Web Tokens (JWT) to be used for subsequent requests. The authorization
+ * process is handled by a custom filter called {@link CustomAuthorizationFilter}. This filter checks for the presence
+ * of a valid JWT in the request header and authorizes the request accordingly.
+ * </p>
+ *
+ * <p>
+ * This class allows access to the /api/login, /api/register, and /stream/** endpoints without authentication. All
+ * other requests require authentication.
+ * </p>
+ *
+ * <p>
+ * This code is adapted from a tutorial by Get Arrays (https://www.getarrays.io/).
+ * </p>
+ *
  * @version 1.0
  * @since 7/10/2021
  */
@@ -27,6 +50,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.*;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -40,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter customAuthenticationFilter =
                 new CustomAuthenticationFilter(authenticationManagerBean(),
                         JwtUtil.getInstance(), JsonUtil.getSingleton());
+
         http.cors();
         http.csrf().disable();
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");

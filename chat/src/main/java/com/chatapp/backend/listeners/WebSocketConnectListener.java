@@ -12,12 +12,23 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
 
+/**
+ * Listener for WebSocket session connect events.
+ * Subscribes a user upon connection.
+ */
 @Component
 @Slf4j
 public class WebSocketConnectListener implements ApplicationListener<SessionConnectEvent> {
+
     @Autowired
     SubscriberService subscriberService;
 
+    /**
+     * Called when a WebSocket session is connected.
+     * Subscribes the user associated with the session.
+     *
+     * @param event the connect event
+     */
     @Override
     public void onApplicationEvent(SessionConnectEvent event) {
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
@@ -27,6 +38,7 @@ public class WebSocketConnectListener implements ApplicationListener<SessionConn
     }
 
 }
+
 
 
 

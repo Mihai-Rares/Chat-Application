@@ -25,11 +25,24 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
+/**
+ * An interceptor to handle WebSocket handshake requests and authenticate users with JWT tokens.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class JwtHandshakeInterceptor implements HandshakeInterceptor {
     private final JwtUtil util;
 
+    /**
+     * Called before the WebSocket handshake is completed.
+     *
+     * @param request    the current request
+     * @param response   the current response
+     * @param wsHandler  the WebSocketHandler that will handle the WebSocket messages
+     * @param attributes attributes from the HTTP handshake to associate with the WebSocket session
+     * @return true if the handshake should proceed, false otherwise
+     * @throws Exception if an error occurs while handling the handshake
+     */
     @Override
     public boolean beforeHandshake(ServerHttpRequest request,
                                    ServerHttpResponse response,
@@ -40,8 +53,8 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             String token = servletRequest.getServletRequest().getParameter("token");
             if (token != null) {
                 try {
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(util.getAuthenticationToken("Bearer " + token));
+                    SecurityContextHolder.getContext().setAuthentication(
+                            util.getAuthenticationToken("Bearer " + token));
                 } catch (Exception exception) {
                     log.error("Error logging in: {}", exception.getMessage());
                     response.setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -52,10 +65,19 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
         return true;
     }
 
+    /**
+     * Called after the WebSocket handshake is successfully completed.
+     *
+     * @param request   the current request
+     * @param response  the current response
+     * @param wsHandler the WebSocketHandler that will handle the WebSocket messages
+     * @param exception an exception that occurred after the handshake (may be null)
+     */
     @Override
     public void afterHandshake(ServerHttpRequest request,
                                ServerHttpResponse response,
                                WebSocketHandler wsHandler,
                                Exception exception) {
+        // Empty implementation
     }
 }

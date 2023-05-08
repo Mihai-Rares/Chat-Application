@@ -18,15 +18,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Provides services for managing users in the application.
+ */
 @Slf4j
 @Transactional
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
+
     private final UserDAO userDAO;
     private final ChannelDAO channelDAO;
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Loads the user with the specified username.
+     *
+     * @param username the username of the user to load
+     * @return the user details
+     * @throws UsernameNotFoundException if the user with the specified username is not found
+     */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDAO.findByUsername(username);
         if (user == null) {
@@ -40,28 +51,65 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /**
+     * Gets the user with the specified username.
+     *
+     * @param username the username of the user to get
+     * @return the user with the specified username, or null if no such user exists
+     */
     public User getUserWithUsername(String username) {
         return userDAO.findByUsername(username);
     }
 
+    /**
+     * Adds a new user to the system.
+     *
+     * @param user the user to add
+     */
     public void addNewUser(User user) {
-        log.info("Recived new user {}", user.getUsername());
+        log.info("Received new user {}", user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.save(user);
     }
 
+    /**
+     * Gets the group with the specified name for the specified user.
+     *
+     * @param groupname the name of the group to get
+     * @param username  the username of the user to get the group for
+     * @return the group with the specified name for the specified user
+     */
     public Channel getGroupForUser(String groupname, String username) {
         return userDAO.findByUsername(username).getGroup(groupname);
     }
 
+    /**
+     * Gets the channels that the specified user is a member of.
+     *
+     * @param username the username of the user to get the channels for
+     * @return a list of channels that the specified user is a member of
+     */
     public List<Channel> getChannels(String username) {
         return new ArrayList(userDAO.findByUsername(username).getMemberOf());
     }
 
+    /**
+     * Gets the groups that the specified user administrates.
+     *
+     * @param username the username of the user to get the groups for
+     * @return a list of groups that the specified user administrates
+     */
     public List<Channel> getAdministratedGroups(String username) {
         return new ArrayList(userDAO.findByUsername(username).getMemberOf());
     }
 
+    /**
+     * Adds the specified user to the specified channel.
+     *
+     * @param adminName the username of the administrator adding the user to the channel
+     * @param username  the username of the user to add to the channel
+     * @param id        the ID of the channel to add the user to
+     */
     public void addToChannel(String adminName, String username, long id) {
         User admin = getUserWithUsername(adminName);
         Channel channel = channelDAO.findById(id);

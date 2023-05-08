@@ -14,6 +14,9 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * REST controller for handling channel related requests.
+ */
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -21,6 +24,12 @@ public class ChannelController {
     private final ChannelService channelService;
     private final UserService userService;
 
+    /**
+     * Handles a request to create a new group channel.
+     *
+     * @param principal the authenticated principal making the request.
+     * @param name      the name of the new channel.
+     */
     @PostMapping("/makeGroup")
     public void makeGroup(Principal principal, @RequestBody String name) {
         User user = userService.getUserWithUsername(principal.getName());
@@ -35,6 +44,12 @@ public class ChannelController {
         channelService.addNewChannel(channel);
     }
 
+    /**
+     * Handles a request to start a new conversation channel with another user.
+     *
+     * @param principal         the authenticated principal making the request.
+     * @param contactedUsername the username of the user to start the conversation with.
+     */
     @PostMapping("/startConversation")
     public void startConversation(Principal principal, @RequestBody String contactedUsername) {
         User user = userService.getUserWithUsername(principal.getName());
@@ -49,5 +64,4 @@ public class ChannelController {
             channelService.addNewChannel(channel);
         }
     }
-
 }
