@@ -201,7 +201,7 @@ Acest endpoint este folosit pentru a obține mesajele noi pentru un anumit canal
 
 Endpointul returnează un șir de caractere JSON reprezentând lista de mesaje noi.
 
-##Endpointurile disponibile pentru gestionarea conversațiilor:
+## Endpointurile disponibile pentru gestionarea conversațiilor:
 
 - POST /api/register: Acest endpoint permite înregistrarea unui nou utilizator în sistem. Se trimite un obiect User în corpul cererii HTTP, iar serverul adaugă noul utilizator în baza de date. Returnează un ResponseEntity cu un cod de stare HTTP 200 (OK) și un corp de răspuns gol.
 
