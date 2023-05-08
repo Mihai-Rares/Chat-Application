@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
 
     private final UserDAO userDAO;
     private final ChannelDAO channelDAO;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Loads the user with the specified username.

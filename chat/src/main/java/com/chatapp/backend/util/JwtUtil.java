@@ -1,6 +1,7 @@
 package com.chatapp.backend.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.annotation.Bean;
@@ -18,9 +19,13 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "SECRET KEY";
 
-    private static final int TOKEN_VALIDITY = 3600 * 100;
+    public static String getSecretKey() {
+        return SECRET_KEY;
+    }
+
+    public static final int TOKEN_VALIDITY = 3600 * 100;
     private static final JwtUtil singleton = new JwtUtil();
-    
+
     public static JwtUtil getInstance() {
         return singleton;
     }
@@ -47,8 +52,12 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        try {
+            final String username = getUsernameFromToken(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        } catch (ExpiredJwtException e) {
+            return false;
+        }
     }
 
     private Boolean isTokenExpired(String token) {

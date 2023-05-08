@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
-public class Channel {
+public class Channel implements Comparable<Channel> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long channel_id;
@@ -76,5 +76,21 @@ public class Channel {
 
     public String toString() {
         return "{ \"id\" : \"" + channel_id + "\" , \"name\" : \"" + name + "\" }";
+    }
+
+    public void setId(long l) {
+        channel_id = l;
+    }
+
+    @Override
+    public int compareTo(Channel o) {
+        long dif = channel_id - o.channel_id;
+        if (dif == 0) {
+            return 0;
+        }
+        if (dif < 0) {
+            return -1;
+        }
+        return 1;
     }
 }

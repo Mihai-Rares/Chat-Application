@@ -73,7 +73,7 @@ public class MessageController {
      * @param newMessageRequest an object containing the channel ID and the ID of the last received message.
      * @return a JSON string representing the list of new messages.
      */
-    @PostMapping("getNewMessages")
+   /* @PostMapping("getNewMessages")
     public String getNewMessages(Principal principal, @RequestBody NewMessageRequest newMessageRequest) {
         ArrayList<Message> messages =
                 new ArrayList<>(messageService
@@ -81,7 +81,7 @@ public class MessageController {
                                 newMessageRequest.channelId, newMessageRequest.messageId));
         messages.sort(Comparator.comparingLong(Message::getId));
         return jsonUtil.getJSON(messages);
-    }
+    }*/
 
     /**
      * Class representing the JSON object expected in the request body for sending a message.

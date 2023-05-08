@@ -1,10 +1,15 @@
 package com.chatapp.backend.model;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,6 +58,19 @@ public class Message {
     public String toString() {
         return "{ \"text\" : \"" + text + "\" , \"date\" : \"" + date
                 + "\" , \"id\" : \"" + message_id + "\" , \"to\" : \"" + to.getId() + "\" , \"from\" : \"" + from.getUsername() + "\" }";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message message = (Message) o;
+        return message_id == message.message_id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message_id);
     }
 
     public long getId() {

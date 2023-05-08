@@ -47,12 +47,12 @@ public class MessageService {
         return messages.getMessages(user);
     }
 
-    public List<Message> getNewMessages(String username, long channelId, long messageId) {
+    /*public List<Message> getNewMessages(String username, long channelId, long messageId) {
         Channel channel = channelDAO.findById(channelId);
         User user = userDAO.findByUsername(username);
         if (channel == null || !channel.isMember(user)) {
             return List.of();
         }
         return messages.findMessagesByToAndMessage_idGreaterThan(channel, messageId);
-    }
+    }*/
 }

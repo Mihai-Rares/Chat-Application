@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class User {
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,5 +76,17 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public int compareTo(User o) {
+        long dif = user_id - o.user_id;
+        if (dif == 0) {
+            return 0;
+        }
+        if (dif < 0) {
+            return -1;
+        }
+        return 1;
     }
 }
