@@ -7,11 +7,16 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 
-public record Subscriber(String username) {
+public record Subscriber(String username) implements Comparable<Subscriber> {
     @Autowired
     private static SimpMessagingTemplate messagingTemplate;
 
     public void sendMessage(Message message) throws IOException {
-        messagingTemplate.convertAndSendToUser(username, "/queue/message", message.toString());
+        messagingTemplate.convertAndSendToUser(username, "/queue/new-message", message.toString());
+    }
+
+    @Override
+    public int compareTo(Subscriber o) {
+        return username.compareTo(o.username);
     }
 }

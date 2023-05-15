@@ -19,7 +19,11 @@ export class Conversation implements Channel {
         return this.correspondent;
     }
     getLastMessage(): Message {
-        return this._messages[this._messages.length-1];
+        const message = this._messages[this._messages.length-1];
+        if(message != null){
+          return message;
+        }
+        return new Message("", new Date(), "", "");
     }
     getMessages(): Message[] {
         return this._messages;

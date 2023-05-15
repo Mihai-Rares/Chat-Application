@@ -2,15 +2,17 @@ import { Injectable } from '@angular/core';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { UserAuthService } from './user-auth.service';
-import { throwError } from 'rxjs';
+import {BehaviorSubject, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
   private stompClient: any;
-
-  constructor(private authService : UserAuthService) {}
+  private connectionStatus = new BehaviorSubject<boolean>(false);
+  constructor(private authService : UserAuthService) {
+    this.connect();
+  }
 
   connect() {
     const token : String | null = this.authService.getToken();
@@ -19,7 +21,8 @@ export class WebSocketService {
       const socket = new SockJS(`http://localhost:9090/stream/message-flux?token=${token}`);
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect({}, (frame: any) => {
-        this.stompClient.subscribe('stream/topic/greetings', (notification: any) => {
+        this.connectionStatus.next(true);
+        this.stompClient.subscribe('stream/user/test', (notification: any) => {
           console.log(notification);
           console.log("????????????????????????");
         });
@@ -31,12 +34,21 @@ export class WebSocketService {
   }
 
   disconnect() {
-    if (this.stompClient !== null) {
+    if (this.stompClient != null) {
       this.stompClient.disconnect();
     }
   }
-
+  subscribeToTopic(topic : string, listener : any){
+    this.connectionStatus.subscribe(connected => {
+      if (connected) {
+        this.stompClient.subscribe(`stream/user/${topic}`, listener);
+      }
+    });
+      
+  }
   sendMessage(message: string) {
-    this.stompClient.send('/stream/app/hello', {}, message);
+    if (this.stompClient != null) {
+      this.stompClient.send('/stream/app/hello', {}, message);
+    }
   }
 }

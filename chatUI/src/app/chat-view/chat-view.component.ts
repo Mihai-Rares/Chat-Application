@@ -27,7 +27,6 @@ export class ChatViewComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit(): void {
-    this.socketService.connect();
     this.intervalId = setInterval(
       ()=> {
         this.messages =  this.channelsService.getMessages(this.chatService.correspondent);

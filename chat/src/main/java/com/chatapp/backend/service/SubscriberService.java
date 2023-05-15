@@ -6,6 +6,7 @@ import com.chatapp.backend.model.Message;
 import com.chatapp.backend.model.Subscriber;
 import com.chatapp.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -29,6 +30,10 @@ public class SubscriberService {
      */
     @Autowired
     UserDAO userDAO;
+
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     /**
      * Creates a new SubscriberService object.
@@ -105,7 +110,7 @@ public class SubscriberService {
         Collection<Subscriber> subscribers = topics.get(channelId);
         if (subscribers != null) {
             for (Subscriber subscriber : subscribers) {
-                subscriber.sendMessage(message);
+                messagingTemplate.convertAndSendToUser(subscriber.username(), "/queue/new-message", message.toString());
             }
         }
     }

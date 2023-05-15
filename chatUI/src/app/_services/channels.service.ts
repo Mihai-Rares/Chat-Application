@@ -3,30 +3,34 @@ import { Channel } from '../_models/channel';
 import { Conversation } from '../_models/conversation';
 import { Message } from '../_models/message';
 import { UserService } from './user.service';
+import { WebSocketService } from './web-socket.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChannelsService implements OnInit, OnDestroy{
+export class ChannelsService{
   private _channels: Channel[] = [];
   private channelMap : Map<string, Channel> = new Map();
   private intervalId ?: any;
-  constructor(public userService: UserService) {
-    this.ngOnInit();
+  constructor(public userService: UserService, private socketService : WebSocketService) {
+    this.computeChannels()
+    this.socketService.subscribeToTopic('queue/new-message', (notification : any) =>{
+      const message : any = notification.body;
+      const channel = this.channelMap.get(message.to);
+      if(channel != null){
+        channel.addMessage(
+          new Message(message.id, new Date(parseInt(message.date))
+            , message.text, message.from));
+      }
+      else{
+        throw new Error("message to non-registered channel");
+      }
+    });
   }
 
-  ngOnDestroy(): void {
-        clearInterval(this.intervalId);
-    }
 
   public get channels(): Channel[] {
     return this._channels;
-  }
-
-  public ngOnInit(): void {
-    // console.log("chanel service");
-      this.computeChannels();
-      this.intervalId = setInterval(() => this.computeChannels(), 1000);
   }
 
   public async computeChannels(){
@@ -36,7 +40,7 @@ export class ChannelsService implements OnInit, OnDestroy{
     // console.log(basicChannels);
     for (let basicChannel of basicChannels){
       if(basicChannel.name==""){
-        let channel : Channel = new Conversation(basicChannel.id, "Person", []);
+        let channel : Channel = new Conversation(basicChannel.id, "", []);
         channelMap.set(basicChannel.id, channel);
       }
     }

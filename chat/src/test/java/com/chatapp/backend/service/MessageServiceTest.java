@@ -84,7 +84,6 @@ public class MessageServiceTest {
         Message m = new Message(0, "text", 1, user, channel);
         given(userDAO.findByUsername("testuser")).willReturn(user);
         given(channelDAO.findById(2)).willReturn(null);
-        given(messages.save(m)).willReturn(message);
 
         //when
         Message result = messageService.sendMessage("testuser", 2, "text");

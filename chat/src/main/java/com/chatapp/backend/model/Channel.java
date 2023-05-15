@@ -3,6 +3,7 @@ package com.chatapp.backend.model;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -12,6 +13,7 @@ public class Channel implements Comparable<Channel> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long channel_id;
     private String name;
+    //private boolean group;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Memberships",
             joinColumns = {
@@ -74,8 +76,15 @@ public class Channel implements Comparable<Channel> {
         return members.contains(user);
     }
 
-    public String toString() {
-        return "{ \"id\" : \"" + channel_id + "\" , \"name\" : \"" + name + "\" }";
+    public String getJSON(String username) {
+        String channelName = name;
+        if (name.equals("")) {
+            Optional<User> otherUser = members.stream().filter(user -> !user.username.equals(username)).findFirst();
+            if (otherUser.isPresent()) {
+                channelName = otherUser.get().username;
+            }
+        }
+        return "{ \"id\" : \"" + channel_id + "\" , \"name\" : \"" + channelName + "\" }";
     }
 
     public void setId(long l) {
