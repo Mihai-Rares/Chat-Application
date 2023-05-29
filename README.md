@@ -30,6 +30,9 @@ Astfel, se remarcă 3 componente principale: Business, Domain și Persistence.
 
 Baza de date folosită este MySql.
 
+## Manual de utilizare
+Utilizarea aplicației începe prin înregistrarea unui nou cont. Pentru aceasta este nevoie doar de un nume de utilizator unic, un email și o parolă. După acestea se intră în aplicație și se caută alți utilizatori sau grupuri cu care se dorește interacțiunea. Se alege unul dintre acestea și se trimit mesaje utilizând bara de text din partea dreaptă jos a paginii. În cadrul grupurilor se poat primii credențiale de admin care permit adăugarea și ștergerea membrilor. De asemenea se pot începe noi grupuri, primind automat credențialele de admin.
+
 # Tabelele bazei de date
 
 ## Tabela "User"
@@ -212,3 +215,4 @@ Endpointul returnează un șir de caractere JSON reprezentând lista de mesaje n
 - GET /api/administratedGroups: Acest endpoint permite obținerea listei cu toate canalele (grupurile) administrate de utilizatorul curent. Endpoint-ul este protejat prin autentificare și are nevoie de un principal (utilizator autentificat). Returnează un șir JSON care conține toate canalele administrate de utilizatorul curent.
 
 - POST /api/getGroup: Acest endpoint permite obținerea unui canal (grup) cu un anumit nume pentru utilizatorul curent. Se trimite în corpul cererii HTTP numele canalului, iar serverul returnează un șir JSON cu detaliile canalului respectiv pentru utilizatorul curent. Endpoint-ul este protejat prin autentificare și are nevoie de un principal (utilizator autentificat). Returnează un șir JSON cu detaliile canalului respectiv.
+
