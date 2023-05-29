@@ -5,11 +5,13 @@ import com.chatapp.backend.service.MessageService;
 import com.chatapp.backend.service.SubscriberService;
 import com.chatapp.backend.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 
 
@@ -19,6 +21,7 @@ import java.util.Comparator;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Slf4j
 public class MessageController {
     private final MessageService messageService;
     private final SubscriberService subscriberService;
@@ -32,9 +35,9 @@ public class MessageController {
      * @return a JSON string representing the list of messages.
      */
     @GetMapping("/messagesForChannel")
-    public String getMessagesForChannel(Principal principal, @RequestBody long channelId) {
+    public Collection<Message> getMessagesForChannel(Principal principal, @RequestBody long channelId) {
         ArrayList<Message> messages = new ArrayList<>(messageService.getMessagesForChannel(principal.getName(), channelId));
-        return jsonUtil.getJSON(messages);
+        return messages;
     }
 
     /**
@@ -44,10 +47,10 @@ public class MessageController {
      * @return a JSON string representing the list of messages.
      */
     @GetMapping("/messages")
-    public String getMessages(Principal principal) {
+    public Collection<Message> getMessages(Principal principal) {
         ArrayList<Message> messages = new ArrayList<>(messageService.getMessages(principal.getName()));
         messages.sort(Comparator.comparingLong(Message::getId));
-        return jsonUtil.getJSON(messages);
+        return messages;
     }
 
     /**
@@ -59,6 +62,7 @@ public class MessageController {
     @PostMapping("/sendMessage")
     public void sendMessage(Principal principal, @RequestBody MessageInfo messageInfo) {
         Message message = messageService.sendMessage(principal.getName(), messageInfo.to, messageInfo.text);
+        log.info(message.getText());
         try {
             subscriberService.broadcast(messageInfo.to, message);
         } catch (IOException e) {

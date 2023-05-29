@@ -29,7 +29,7 @@ public class ChatApplication {
     CommandLineRunner run(UserService userService, ChannelService channelService,
                           MessageService messageService) {
         loadUsers(userService);
-        return args -> userService.addNewUser(new User("username", "email", "password"));
+        return args -> userService.addNewUser(new User("John Doe", "email", "password"));
     }
 
     void loadUsers(UserService userService) {

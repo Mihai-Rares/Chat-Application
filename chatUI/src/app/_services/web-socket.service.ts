@@ -10,6 +10,7 @@ import {BehaviorSubject, throwError } from 'rxjs';
 export class WebSocketService {
   private stompClient: any;
   private connectionStatus = new BehaviorSubject<boolean>(false);
+  private sessionId = "";
   constructor(private authService : UserAuthService) {
     this.connect();
   }
@@ -21,11 +22,15 @@ export class WebSocketService {
       const socket = new SockJS(`http://localhost:9090/stream/message-flux?token=${token}`);
       this.stompClient = Stomp.over(socket);
       this.stompClient.connect({}, (frame: any) => {
+        let url = this.stompClient.ws._transport.url;
+        url = url.replace(
+          "ws://localhost:9090/stream/message-flux",  "");
+        url = url.replace(/^\/[0-9]+\//, "");
+        url = url.replace("/websocket", "");
+        url = url.replace(`?token=${token}`, "");
+        console.log("Your current session is: " + url);
+        this.sessionId = url;
         this.connectionStatus.next(true);
-        this.stompClient.subscribe('stream/user/test', (notification: any) => {
-          console.log(notification);
-          console.log("????????????????????????");
-        });
       });
     } else{
       throwError(()=>"ERROR WEBSOCKET CONNECTION");
@@ -41,10 +46,10 @@ export class WebSocketService {
   subscribeToTopic(topic : string, listener : any){
     this.connectionStatus.subscribe(connected => {
       if (connected) {
-        this.stompClient.subscribe(`stream/user/${topic}`, listener);
+        this.stompClient.subscribe(`/stream/user${topic}`+ '-user' + this.sessionId, listener);
       }
     });
-      
+
   }
   sendMessage(message: string) {
     if (this.stompClient != null) {

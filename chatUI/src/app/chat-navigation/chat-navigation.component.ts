@@ -10,6 +10,7 @@ import { UserService } from '../_services/user.service';
   styleUrls: ['./chat-navigation.component.css']
 })
 export class ChatNavigationComponent implements OnInit, OnDestroy {
+  public showModal = false;
   public channels : Channel[];
   private intervalId ?: any;
   constructor(private channelService : ChannelsService, private userService : UserService) {
@@ -20,13 +21,24 @@ export class ChatNavigationComponent implements OnInit, OnDestroy {
     return this.userService.username;
   }
   ngOnDestroy(): void {
-      clearInterval(this.intervalId);
+      //clearInterval(this.intervalId);
     }
 
   ngOnInit(): void {
-    this.intervalId = setInterval(()=>{this.channels = this.channelService.channels}, 500);
+    this.channelService.subscribeToChannelUpdates((channels : any) => {this.channels = channels});
+    //this.intervalId = setInterval(()=>{this.channels = this.channelService.channels}, 500);
   }
   trackByFn(index: number, item: Channel): string {
     return item.getId();
+  }
+  startConversation(){
+    var username : string | null = prompt("Enter Username:");
+    if(username != null) {
+      let response = this.userService.startConversation(username).subscribe(
+        (response : any) => {console.log(response);},
+        (error)=>{console.log(error)}
+      );
+    }
+    console.log(username);
   }
 }

@@ -10,6 +10,7 @@ export class UserService {
     if(user!=null){
       return user;
     }
+
     return "";
   }
   PATH_OF_API: string="http://localhost:9090/api";
@@ -37,6 +38,9 @@ export class UserService {
   public sendMessage(messageData: any){
     console.log("send message request\n");
     return this.httpClient.post(this.PATH_OF_API+"/sendMessage", messageData);
+  }
+  public startConversation(username: string){
+    return this.httpClient.post(this.PATH_OF_API+"/startConversation", username);
   }
 
 }

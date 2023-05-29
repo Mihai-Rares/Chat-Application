@@ -8,6 +8,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class MessageViewComponent implements OnInit {
   @Input()
   public textInput: string="text";
+  @Input()
+  public from: string="";
   constructor() { }
 
   ngOnInit(): void {

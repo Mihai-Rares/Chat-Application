@@ -1,8 +1,9 @@
+import { Account } from "./account";
 import { Channel } from "./channel";
 import { Message } from "./message";
 
 export class Conversation implements Channel {
-  constructor(private id:string, private correspondent: string, private _messages: Message[]) {
+  constructor(private id:string, private correspondent: Account, private _messages: Message[]) {
     _messages.sort(((a, b) => {
       return a.sent.getTime() - b.sent.getTime();
     }));
@@ -16,7 +17,7 @@ export class Conversation implements Channel {
         return this.id;
     }
     getName(): string {
-        return this.correspondent;
+        return this.correspondent.username;
     }
     getLastMessage(): Message {
         const message = this._messages[this._messages.length-1];

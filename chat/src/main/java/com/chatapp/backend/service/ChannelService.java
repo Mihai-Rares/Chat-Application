@@ -28,9 +28,9 @@ public class ChannelService {
      *
      * @param channel the channel to save
      */
-    public void addNewChannel(Channel channel) {
+    public Channel addNewChannel(Channel channel) {
         log.info("Received new channel {}", channel.getName());
-        channels.save(channel);
+        return channels.save(channel);
     }
 
     /**

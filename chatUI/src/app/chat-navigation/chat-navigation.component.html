@@ -1,12 +1,15 @@
-<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 390px;">
-  <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 390px;">
-    <a href="/home" class="d-flex align-items-center flex-shrink-0 p-3 link-dark
-    text-decoration-none border-bottom">
+<div class="hide-scroll-bar d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 390px; ">
+  <div class=" hide-scroll-bar d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 390px;">
+    <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark
+    text-decoration-none border-bottom border-right">
       <svg class="bi pe-none me-2" width="30" height="24">
         <use href="#bootstrap"/>
       </svg>
-      <span class="fs-5 fw-semibold">{{getUsername()}}</span>
-    </a>
+      <div class="d-flex justify-content-between w-100">
+        <span class="fs-5 fw-semibold">{{getUsername()}}</span>
+      </div>
+    </div>
+
     <div class="list-group list-group-flush border-bottom scrollarea">
       <ng-container *ngFor = "let item of channels; trackBy: trackByFn" >
         <app-channel [channelName] = "item.getName()" [sent] = "item.getLastMessage().sent"

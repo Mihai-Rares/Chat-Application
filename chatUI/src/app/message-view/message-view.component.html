@@ -1,2 +1,5 @@
-<div class="alert alert-secondary" role="alert" style="max-width: 70%">{{textInput}}</div>
+<div class="alert alert-secondary" role="alert" style="max-width: 70%">
+  <b *ngIf="from!==''">{{from}}</b>
+  <div>{{textInput}}</div>
+</div>
 

@@ -1,5 +1,8 @@
 package com.chatapp.backend.model;
 
+import com.chatapp.backend.util.json.JSONSerializable;
+import com.chatapp.backend.util.json.SimpleChannelSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,7 @@ public class Message {
     @ManyToOne
     private User from;
     @ManyToOne
+    @JsonSerialize(using = SimpleChannelSerializer.class)
     private Channel to;
 
     public String getText() {
@@ -55,7 +59,7 @@ public class Message {
         this.to = to;
     }
 
-    public String toString() {
+    public String toJSON() {
         return "{ \"text\" : \"" + text + "\" , \"date\" : \"" + date
                 + "\" , \"id\" : \"" + message_id + "\" , \"to\" : \"" + to.getId() + "\" , \"from\" : \"" + from.getUsername() + "\" }";
     }

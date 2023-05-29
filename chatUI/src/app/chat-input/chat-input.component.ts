@@ -25,4 +25,8 @@ export class ChatInputComponent implements OnInit {
       (error)=>{console.log(error)}
     );
   }
+  clearText(event: Event) {
+    const target = event.target as HTMLInputElement;
+    target.value = '';
+  }
 }

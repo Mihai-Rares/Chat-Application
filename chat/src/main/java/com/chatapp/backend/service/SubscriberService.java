@@ -1,10 +1,8 @@
 package com.chatapp.backend.service;
 
 import com.chatapp.backend.dao.UserDAO;
-import com.chatapp.backend.model.Channel;
-import com.chatapp.backend.model.Message;
-import com.chatapp.backend.model.Subscriber;
-import com.chatapp.backend.model.User;
+import com.chatapp.backend.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -20,11 +18,13 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * This class represents a service for managing subscribers and channels.
  */
 @Service
+@Slf4j
 public class SubscriberService {
     /**
      * A map that associates a channel ID with a collection of subscribers.
      */
     private Map<Long, Collection<Subscriber>> topics;
+    private Map<String, Subscriber> subscribers;
     /**
      * The DAO object for accessing user information.
      */
@@ -40,6 +40,7 @@ public class SubscriberService {
      */
     public SubscriberService() {
         this.topics = new ConcurrentHashMap<>();
+        this.subscribers = new ConcurrentHashMap<>();
     }
 
     /**
@@ -50,6 +51,16 @@ public class SubscriberService {
      */
     public synchronized void subscribeToChannel(long channelId, Subscriber subscriber) {
         Collection<Subscriber> subscribers = topics.get(channelId);
+        if (subscribers == null) {
+            subscribers = new ConcurrentSkipListSet<>();
+            topics.put(channelId, subscribers);
+        }
+        subscribers.add(subscriber);
+    }
+
+    public synchronized void subscribeToChannel(long channelId, String username) {
+        Collection<Subscriber> subscribers = topics.get(channelId);
+        Subscriber subscriber = this.subscribers.get(username);
         if (subscribers == null) {
             subscribers = new ConcurrentSkipListSet<>();
             topics.put(channelId, subscribers);
@@ -81,8 +92,30 @@ public class SubscriberService {
     public void subscribeUser(String username) {
         User user = userDAO.findByUsername(username);
         Subscriber subscriber = new Subscriber(username);
+        subscribers.put(username, subscriber);
+        log.info("subscribing user {}", user.getUsername());
         for (Channel channel : user.getMemberOf()) {
             subscribeToChannel(channel.getId(), subscriber);
+        }
+    }
+
+    public void addChannel(long id) {
+        Collection<Subscriber> subscribers = new ConcurrentSkipListSet<>();
+        topics.put(id, subscribers);
+    }
+
+    public void notify(String username, Notification notification) {
+        messagingTemplate.convertAndSendToUser(username,
+                "/stream/user/queue/notifications", notification.toJSON());
+    }
+
+    public void broadcastNotification(long channelId, Notification notification) {
+        Collection<Subscriber> subscribers = topics.get(channelId);
+        if (subscribers != null) {
+            for (Subscriber subscriber : subscribers) {
+                messagingTemplate.convertAndSendToUser(subscriber.username(),
+                        "/stream/user/queue/notifications", notification.toJSON());
+            }
         }
     }
 
@@ -109,8 +142,10 @@ public class SubscriberService {
     public void broadcast(long channelId, Message message) throws IOException {
         Collection<Subscriber> subscribers = topics.get(channelId);
         if (subscribers != null) {
+            log.info("broadcasting message {}", message.getText());
             for (Subscriber subscriber : subscribers) {
-                messagingTemplate.convertAndSendToUser(subscriber.username(), "/queue/new-message", message.toString());
+                messagingTemplate.convertAndSendToUser(subscriber.username(),
+                        "/stream/user/queue/new-message", message.toJSON());
             }
         }
     }

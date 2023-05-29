@@ -1,8 +1,10 @@
 package com.chatapp.backend.controller;
 
 import com.chatapp.backend.model.Channel;
+import com.chatapp.backend.model.Notification;
 import com.chatapp.backend.model.User;
 import com.chatapp.backend.service.ChannelService;
+import com.chatapp.backend.service.SubscriberService;
 import com.chatapp.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,7 @@ import java.util.Set;
 public class ChannelController {
     private final ChannelService channelService;
     private final UserService userService;
+    private final SubscriberService subscriberService;
 
     /**
      * Handles a request to create a new group channel.
@@ -35,13 +38,16 @@ public class ChannelController {
         User user = userService.getUserWithUsername(principal.getName());
         Channel channel = new Channel();
         channel.setName(name);
+        channel.setGroup(true);
         Set<User> members = new HashSet<>();
         Set<User> admins = new HashSet<>();
         members.add(user);
         admins.add(user);
         channel.setMembers(members);
         channel.setAdmins(admins);
-        channelService.addNewChannel(channel);
+        subscriberService.subscribeToChannel(channelService.addNewChannel(channel).getId(), principal.getName());
+        subscriberService.notify(user.username,
+                new Notification("NEW_GROUP", channel));
     }
 
     /**
@@ -57,11 +63,18 @@ public class ChannelController {
         if (contactedUser != null && user != null) {
             Channel channel = new Channel();
             channel.setName("");
+            channel.setGroup(false);
             Set<User> members = new HashSet<>();
             members.add(user);
             members.add(contactedUser);
             channel.setMembers(members);
-            channelService.addNewChannel(channel);
+            Channel newChannel = channelService.addNewChannel(channel);
+            subscriberService.addChannel(newChannel.getId());
+            subscriberService.subscribeToChannel(newChannel.getId(), principal.getName());
+            subscriberService.notify(user.username,
+                    new Notification("NEW_CONVERSATION", newChannel));
+            subscriberService.notify(contactedUser.username,
+                    new Notification("NEW_CONVERSATION", newChannel));
         }
     }
 }

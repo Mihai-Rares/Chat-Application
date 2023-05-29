@@ -13,6 +13,7 @@ import { WebSocketService } from '../_services/web-socket.service';
 })
 export class ChatViewComponent implements OnInit, OnDestroy {
   public messages : Message[] = [];
+  public isGroup : boolean = false;
   public username : string;
   private intervalId ?: any;
   constructor(private userService : UserService,
@@ -23,17 +24,20 @@ export class ChatViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.intervalId);
+    //clearInterval(this.intervalId);
     }
 
   ngOnInit(): void {
-    this.intervalId = setInterval(
-      ()=> {
-        this.messages =  this.channelsService.getMessages(this.chatService.correspondent);
-        //this.set
-      },
-      500);
-
+    this.chatService.observeCorrespondent((correspondent : string) => {
+      this.isGroup = this.channelsService.isGroup(correspondent);
+      this.messages = this.channelsService.getMessages(correspondent);
+    } )
+  //   this.intervalId = setInterval(
+  //     ()=> {
+  //       this.messages =  this.channelsService.getMessages(this.chatService.correspondent);
+  //       //this.set
+  //     },
+  //     500);
   }
   trackByFn(index: number, item: Message): string {
     return item.id;

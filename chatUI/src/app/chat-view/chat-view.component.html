@@ -6,7 +6,9 @@
       <app-message-view class="d-flex flex-row-reverse" [textInput] = "item.text"></app-message-view>
     </ng-container>
     <ng-container *ngIf="item.from !== username">
-      <app-message-view class="d-flex flex-row" [textInput] = "item.text" ></app-message-view>
+      <app-message-view *ngIf="isGroup" class="d-flex flex-row" [textInput] = "item.text" [from]="item.from"></app-message-view>
+      <app-message-view *ngIf="!isGroup" class="d-flex flex-row" [textInput] = "item.text"></app-message-view>
+
     </ng-container>
   </ng-container>
 </div>

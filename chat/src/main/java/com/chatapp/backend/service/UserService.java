@@ -72,6 +72,7 @@ public class UserService implements UserDetailsService {
         userDAO.save(user);
     }
 
+
     /**
      * Gets the group with the specified name for the specified user.
      *

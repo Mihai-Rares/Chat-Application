@@ -1,18 +1,23 @@
 package com.chatapp.backend.model;
 
+import com.chatapp.backend.util.json.JSONSerializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class User implements Comparable<User> {
+public class User implements Comparable<User>, JSONSerializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     public int user_id;
     @Column(unique = true, nullable = false)
     public String username;
     public String email;
+    @JsonIgnore
     public String password;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Memberships",
@@ -23,6 +28,7 @@ public class User implements Comparable<User> {
                     @JoinColumn(name = "channel_id")
             }
     )
+    @JsonIgnore
     private Set<Channel> memberOf;
 
     public User(String username, String email, String password) {
@@ -32,6 +38,10 @@ public class User implements Comparable<User> {
     }
 
     public User() {
+    }
+
+    public String toJSON() {
+        return "{ \"username\" : \"" + username + "\" , \"email\" : \"" + email + "\" }";
     }
 
     public Channel getGroup(String groupName) {

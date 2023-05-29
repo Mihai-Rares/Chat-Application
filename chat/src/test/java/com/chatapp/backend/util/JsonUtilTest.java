@@ -6,6 +6,7 @@ import com.chatapp.backend.dao.UserDAO;
 import com.chatapp.backend.model.Channel;
 import com.chatapp.backend.model.Message;
 import com.chatapp.backend.model.User;
+import com.chatapp.backend.util.json.JSONSerializable;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.Before;
@@ -37,7 +38,10 @@ public class JsonUtilTest {
 
     @Test
     public void testGetJSON() {
-        List<String> list = Arrays.asList("one", "two", "three");
+        JSONSerializable one = () -> "one";
+        JSONSerializable two = () -> "two";
+        JSONSerializable three = () -> "three";
+        List<JSONSerializable> list = Arrays.asList(one, two, three);
         String result = jsonUtil.getJSON(list);
         assertEquals("[ one , two , three ] ", result);
     }
